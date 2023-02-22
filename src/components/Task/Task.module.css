@@ -1,0 +1,57 @@
+.wrapper {
+  min-width: 736px;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #333333;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.content p {
+    font-size: 14px;
+    line-height: 19.6px;
+    font-weight: 400;
+    font-family: 'Inter';
+    color: #808080;
+}
+
+.circle {
+  display: flex;
+  height: 17.45px;
+  width: 17.45px;
+  border: 2px solid #4EA8DE;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle:hover {
+  cursor: pointer;
+  background: #1E6F9F;
+}
+
+.hideCheckMark .circle svg {
+  display: none;
+}
+
+.showCheckMark .circle {
+  background: #5E60CE;
+  border: 2px solid #5E60CE;
+}
+
+.showCheckMark p {
+  text-decoration: line-through;
+}
+
+.showCheckMark .circle svg {
+  display: flex;
+}
