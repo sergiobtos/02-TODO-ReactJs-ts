@@ -26,7 +26,7 @@ function Task({ task, onDeleteTask, onCompletedCount }: TaskProps) {
   return (
     <div id="task" className={styles.wrapper}>
       <div className={`${styles.content} ${!isDone ? styles.hideCheckMark : styles.showCheckMark} `}>
-        <span className={styles.circle} onClick={handleIsDone}><CheckMark /></span>
+        <div><span className={styles.circle} onClick={handleIsDone}><CheckMark /></span></div>
         <p>{task}</p>
         <button onClick={handleDeleteTask}><Trash /></button>
       </div>

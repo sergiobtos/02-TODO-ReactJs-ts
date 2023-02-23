@@ -29,13 +29,13 @@ function Todo() {
   }
 
   const handleCompletedCount = (isCompleted: boolean) => {
-    if(!isCompleted){
+    if (!isCompleted) {
       setCompletedCount((state) => {
         return state + 1;
       })
-    }else{
+    } else {
       setCompletedCount((state) => {
-        return state -1;
+        return state - 1;
       })
     }
   }
@@ -52,6 +52,10 @@ function Todo() {
     if (tasks.length <= 0 && result) {
       setTasks([...tasks, ...result]);
     }
+    const count = JSON.parse(localStorage?.getItem('count') as string)
+    if (completedCount <= 0 && count) {
+      setCompletedCount(Number(count))
+    }
   }, []);
 
   useEffect(() => {
@@ -60,11 +64,13 @@ function Todo() {
       const jsonState = JSON.stringify(tasks);
       localStorage.setItem('tasks', jsonState);
     }
-  }, [tasks]);
+    if(completedCount > 0){
+      localStorage.removeItem('count')
+      const localCount = JSON.stringify(completedCount);
+      localStorage.setItem('count', localCount);
+    }
+  }, [tasks, completedCount]);
 
-  useEffect(() => {
-    console.log('Sergio 66', completedCount)
-  }, [completedCount]);
 
   return (
     <div id="todo" className={styles.wrapper}>
@@ -94,11 +100,11 @@ function Todo() {
             </div>
           </div>
           {tasks.length > 0 ? (
-              <div className={styles.tasksContainer}>
-                {tasks.map((task) => (
-                  <Task task={task} onDeleteTask={handleDeleteTask} onCompletedCount={handleCompletedCount} />
-                ))}
-              </div>
+            <div className={styles.tasksContainer}>
+              {tasks.map((task) => (
+                <Task task={task} onDeleteTask={handleDeleteTask} onCompletedCount={handleCompletedCount} />
+              ))}
+            </div>
           ) : (
             <div className={styles.taskContainer}>
               <ClipboardText width={56} height={56} />
