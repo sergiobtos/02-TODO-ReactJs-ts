@@ -7,6 +7,7 @@ import Task from '../Task/Task';
 function Todo() {
   const [tasks, setTasks] = useState<string[]>([]);
   const [newTask, setNewTask] = useState('');
+  const [completedCount, setCompletedCount] = useState(0);
 
   const handleNewTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -24,6 +25,18 @@ function Todo() {
     if (newTask.length > 0) {
       setTasks([...tasks, newTask])
       setNewTask('')
+    }
+  }
+
+  const handleCompletedCount = (isCompleted: boolean) => {
+    if(!isCompleted){
+      setCompletedCount((state) => {
+        return state + 1;
+      })
+    }else{
+      setCompletedCount((state) => {
+        return state -1;
+      })
     }
   }
 
@@ -49,6 +62,10 @@ function Todo() {
     }
   }, [tasks]);
 
+  useEffect(() => {
+    console.log('Sergio 66', completedCount)
+  }, [completedCount]);
+
   return (
     <div id="todo" className={styles.wrapper}>
       <div className={styles.content}>
@@ -73,13 +90,13 @@ function Todo() {
             </div>
             <div className={styles.subTitle}>
               <p>Completed</p>
-              <span>2 de 5</span>
+              <span>{completedCount} de {tasks.length}</span>
             </div>
           </div>
           {tasks.length > 0 ? (
               <div className={styles.tasksContainer}>
                 {tasks.map((task) => (
-                  <Task task={task} onDeleteTask={handleDeleteTask} />
+                  <Task task={task} onDeleteTask={handleDeleteTask} onCompletedCount={handleCompletedCount} />
                 ))}
               </div>
           ) : (
