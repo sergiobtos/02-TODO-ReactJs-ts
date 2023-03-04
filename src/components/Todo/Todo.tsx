@@ -1,17 +1,39 @@
 import styles from './Todo.module.css';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import { PlusCircle, ClipboardText } from 'phosphor-react'
+import { v4 as uuid } from 'uuid';
 import Task from '../Task/Task';
 
 
+export interface ITask {
+  id: string;
+  content: string;
+  isComplete: boolean;
+}
+
+const myTask: ITask[] = [{
+  id: uuid(),
+  content: 'Finish my challenge',
+  isComplete: false,
+}, {
+  id: uuid(),
+  content: 'Finish my challenge',
+  isComplete: false,
+}]
+
 function Todo() {
-  const [tasks, setTasks] = useState<string[]>([]);
-  const [newTask, setNewTask] = useState('');
-  const [completedCount, setCompletedCount] = useState(0);
+  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [newTask, setNewTask] = useState<ITask>();
+
 
   const handleNewTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    setNewTask(e.target.value)
+    const newTask: ITask = {
+      id: uuid(),
+      content: e.target.value,
+      isComplete: false,
+    }
+    setNewTask(newTask)
   }
 
   const handleKeyDown = (e: any) => {
@@ -22,55 +44,63 @@ function Todo() {
 
   const handleCreateTask = (e: FormEvent) => {
     e.preventDefault()
-    if (newTask.length > 0) {
+    if (newTask && newTask?.content?.length > 0) {
       setTasks([...tasks, newTask])
-      setNewTask('')
+      setNewTask({ ...newTask, content: '' })
     }
   }
 
-  const handleCompletedCount = (isCompleted: boolean) => {
-    if (!isCompleted) {
-      setCompletedCount((state) => {
-        return state + 1;
-      })
-    } else {
-      setCompletedCount((state) => {
-        return state - 1;
-      })
+  const handleCompleted = (id: string, isComplete: boolean) => {
+    const updatedTasks = tasks.reduce((acc: ITask[], task: ITask) => {
+      if (task.id === id) {
+        const updatedTask: ITask = {
+          ...task,
+          isComplete: isComplete,
+        };
+        return [...acc, updatedTask];
+      } else {
+        return [...acc, task];
+      }
+    }, []);
+    setTasks(updatedTasks);
+  };
+
+
+  const handleDeleteTask = (task: ITask) => {
+    const updatedTasks = tasks.reduce((acc: ITask[], t: ITask) => {
+      if (t.id !== task.id) {
+        acc.push(t);
+      }
+      return acc;
+    }, []);
+    saveTaskToLocalStorage(updatedTasks)
+    setTasks(updatedTasks);
+  };
+
+  const saveTaskToLocalStorage = (tasksToBeSaved: ITask[]) => {
+    if (tasksToBeSaved?.length > 0) {
+      localStorage.removeItem('tasks')
+      const jsonState = JSON.stringify(tasksToBeSaved);
+      localStorage.setItem('tasks', jsonState);
+    }else{
+      localStorage.removeItem('tasks')
     }
   }
 
-  const handleDeleteTask = (taskToBeDeleted: string) => {
-    const taskWithoutDeletedOne = tasks.filter(task => {
-      return task !== taskToBeDeleted
-    })
-    setTasks(taskWithoutDeletedOne)
+  const getTasksFromLocalStorage = () => {
+    const result = JSON.parse(localStorage?.getItem('tasks') as string)
+    if (tasks.length <= 0 && result) {
+      setTasks(result);
+    }
   }
 
   useEffect(() => {
-    const result = JSON.parse(localStorage?.getItem('tasks') as string)
-    if (tasks.length <= 0 && result) {
-      setTasks([...tasks, ...result]);
-    }
-    const count = JSON.parse(localStorage?.getItem('count') as string)
-    if (completedCount <= 0 && count) {
-      setCompletedCount(Number(count))
-    }
+    getTasksFromLocalStorage()
   }, []);
 
   useEffect(() => {
-    if (tasks?.length > 0) {
-      localStorage.removeItem('tasks')
-      const jsonState = JSON.stringify(tasks);
-      localStorage.setItem('tasks', jsonState);
-    }
-    if(completedCount > 0){
-      localStorage.removeItem('count')
-      const localCount = JSON.stringify(completedCount);
-      localStorage.setItem('count', localCount);
-    }
-  }, [tasks, completedCount]);
-
+    saveTaskToLocalStorage(tasks)
+  }, [tasks]);
 
   return (
     <div id="todo" className={styles.wrapper}>
@@ -81,9 +111,13 @@ function Todo() {
             type="text"
             autoComplete="off"
             placeholder="Add a new task"
-            value={newTask}
+            value={newTask?.content}
             onChange={handleNewTaskChange} onKeyDown={handleKeyDown} />
-          <button type="button" onClick={handleCreateTask}>
+          <button
+            type="button"
+            onClick={handleCreateTask}
+            style={{ opacity: (newTask?.content?.length ?? 0) > 0 ? 1 : 0.5 }}
+            disabled={!newTask || !newTask.content || newTask.content.length <= 0}>
             Create
             <PlusCircle />
           </button>
@@ -92,17 +126,17 @@ function Todo() {
           <div className={styles.sectionContent}>
             <div className={styles.subTitle}>
               <p>Created Tasks</p>
-              <span>{tasks.length}</span>
+              <span>{tasks?.length}</span>
             </div>
             <div className={styles.subTitle}>
               <p>Completed</p>
-              <span>{completedCount} de {tasks.length}</span>
+              <span>{(tasks?.filter((task) => task?.isComplete === true)).length} de {tasks?.length}</span>
             </div>
           </div>
           {tasks.length > 0 ? (
             <div className={styles.tasksContainer}>
               {tasks.map((task) => (
-                <Task task={task} onDeleteTask={handleDeleteTask} onCompletedCount={handleCompletedCount} />
+                <Task key={task?.id} task={task} onDeleteTask={handleDeleteTask} onCompleted={handleCompleted} />
               ))}
             </div>
           ) : (
