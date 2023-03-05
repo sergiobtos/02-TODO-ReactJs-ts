@@ -8,7 +8,7 @@ function Hero() {
     <div id="hero" className={styles.wrapper}>
       <div className={styles.content}>
         <Rocket />
-        <h1>to<span>do</span></h1>
+        <h1>to<span>do</span> by Sergio</h1>
       </div>
     </div>
   )

@@ -11,16 +11,6 @@ export interface ITask {
   isComplete: boolean;
 }
 
-const myTask: ITask[] = [{
-  id: uuid(),
-  content: 'Finish my challenge',
-  isComplete: false,
-}, {
-  id: uuid(),
-  content: 'Finish my challenge',
-  isComplete: false,
-}]
-
 function Todo() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [newTask, setNewTask] = useState<ITask>();
