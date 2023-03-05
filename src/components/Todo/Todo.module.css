@@ -6,7 +6,7 @@
 }
 
 .content {
-  width: 747px;
+  max-width: 747px;
 }
 
 .container {
@@ -27,6 +27,12 @@
   border: 1px solid var(--black);
   align-items: center;
   min-width: 638px;
+}
+
+@media (max-width: 800px) {
+  .container input {
+    min-width: unset;
+  }
 }
 
 .container button {

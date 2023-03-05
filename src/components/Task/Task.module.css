@@ -5,6 +5,12 @@
   background-color: #333333;
 }
 
+@media (max-width: 800px) {
+  .wrapper {
+    min-width: unset;
+  }
+}
+
 .content {
   display: grid;
   grid-template-columns: 0fr 1fr 0fr;

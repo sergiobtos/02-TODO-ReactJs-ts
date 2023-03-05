@@ -1,5 +1,5 @@
 .wrapper {
-  height: 12.5rem;
+  min-height: 12.5rem;
   background: var(--dark);
   display: flex;
   justify-content: center;
