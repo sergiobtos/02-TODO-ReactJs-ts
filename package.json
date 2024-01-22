@@ -23,7 +23,14 @@
     "@types/react-dom": "^18.0.9",
     "@types/uuid": "^9.0.0",
     "@vitejs/plugin-react": "^3.0.0",
+    "react-qr-barcode-scanner": "^1.0.6",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
+  },
+  "overrides": {
+    "react-qr-reader": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
