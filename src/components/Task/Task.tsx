@@ -14,7 +14,7 @@ export interface TaskProps {
 
 
 function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
-
+   const [barcode, setBarCode] = useState();
   const handleIsDone = () => {
     onCompleted(task?.id, !task?.isComplete)
   }
@@ -24,7 +24,8 @@ function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
   }
 
    const handleUpdate = (err: any, result: any) => {
-    if (result) {
+     if (result) {
+      setBarCode(result)
       console.log(result)
     }
   };
@@ -37,6 +38,7 @@ function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
         <p>{task?.content}</p>
         <button onClick={handleDeleteTask}><Trash /></button>
       </div> */}
+      <h1>{barcode}</h1>
      <BarcodeScannerComponent onUpdate={handleUpdate} />
     </div>
   )
