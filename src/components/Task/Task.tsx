@@ -3,7 +3,6 @@ import Trash from '../../assets/Trash';
 import CheckMark from '../../assets/CheckMark';
 import styles from './Task.module.css';
 import { ITask } from '../Todo/Todo';
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 
 export interface TaskProps {
@@ -14,7 +13,6 @@ export interface TaskProps {
 
 
 function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
-   const [barcode, setBarCode] = useState();
   const handleIsDone = () => {
     onCompleted(task?.id, !task?.isComplete)
   }
@@ -22,13 +20,6 @@ function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
   function handleDeleteTask() {
     onDeleteTask(task)
   }
-
-   const handleUpdate = (err: any, result: any) => {
-     if (result) {
-      setBarCode(result)
-      console.log(result)
-    }
-  };
 
 
   return (
@@ -38,8 +29,6 @@ function Task({ task, onDeleteTask, onCompleted }: TaskProps) {
         <p>{task?.content}</p>
         <button onClick={handleDeleteTask}><Trash /></button>
       </div> */}
-      <h1>{barcode}</h1>
-     <BarcodeScannerComponent onUpdate={handleUpdate} />
     </div>
   )
 }
