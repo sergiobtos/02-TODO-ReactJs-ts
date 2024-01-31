@@ -3,7 +3,7 @@ import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import { PlusCircle, ClipboardText } from 'phosphor-react'
 import { v4 as uuid } from 'uuid';
 import Task from '../Task/Task';
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+
 
 export interface ITask {
   id: string;
@@ -14,7 +14,7 @@ export interface ITask {
 function Todo() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [newTask, setNewTask] = useState<ITask>();
-  const [barcode, setBarCode] = useState();
+
 
   const handleNewTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -92,13 +92,6 @@ function Todo() {
     saveTaskToLocalStorage(tasks)
   }, [tasks]);
 
-  const handleUpdate = (err: any, result: any) => {
-     if (result) {
-      setBarCode(result)
-      console.log(result)
-    }
-  };
-
   return (
     <div id="todo" className={styles.wrapper}>
       <div className={styles.content}>
@@ -130,21 +123,19 @@ function Todo() {
               <span>{(tasks?.filter((task) => task?.isComplete === true)).length} de {tasks?.length}</span>
             </div>
           </div>
-           <h1>Barcode: {barcode}</h1>
-     <BarcodeScannerComponent  onUpdate={handleUpdate} />
-          {/* {tasks.length > 0 ? (
+          {tasks.length > 0 ? (
             <div className={styles.tasksContainer}>
               {tasks.map((task) => (
                 <Task key={task?.id} task={task} onDeleteTask={handleDeleteTask} onCompleted={handleCompleted} />
               ))}
             </div>
           ) : (
-               <div className={styles.taskContainer}>
+            <div className={styles.taskContainer}>
               <ClipboardText width={56} height={56} />
               <p>You do not have any tasks added yet</p>
-                <p>Create tasks and organize your things to do</p>
-              </div>
-          )} */}
+              <p>Create tasks and organize your things to do</p>
+            </div>
+          )}
         </section>
       </div>
     </div>
